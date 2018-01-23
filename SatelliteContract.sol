@@ -74,7 +74,7 @@ contract SatelliteContract {
             hash = hash / 10;
             encode[i] = table[rem];
         }
-        string memory luckyNumber = new string(resultLength);
+        string luckyNumber = new string(resultLength);
         luckyNumber = string(encode);
 
         resultOf[currentTurn] = luckyNumber;
