@@ -9,6 +9,7 @@ contract SatelliteContract {
     QRC20Token spcToken;
     QRC20Token chatToken;
     QRC20Token qbaoToken;
+    QRC20Token inkToken;
 
     address contractManager; // 卫星
     uint8 public currentTurn; // 当前开奖轮次
@@ -38,7 +39,7 @@ contract SatelliteContract {
         lastBlockHeight = 55000;
     }
 
-
+    // 投注
     function vote(address _voter, string _luckyNumber) public
     returns (bool) {
         voteRecord[currentTurn][_voter] = _luckyNumber;
@@ -46,6 +47,7 @@ contract SatelliteContract {
         return true;
     }
 
+    // 设置结果
     function setResult(bytes32 _randomSeed) public onlyManager
     returns (bool) {
         if (block.number - lastBlockHeight < 1000) {
@@ -54,22 +56,25 @@ contract SatelliteContract {
 
         bytes32 blockhash = block.blockhash(block.number);
 
-        // todo 计算随机数结果
+        // todo
+        // 根据随机数种子和区块哈希 计算结果
 
 
-        resultOf[currentTurn] = _luckyNumber;
-        ResultSet(currentTurn, _luckyNumber);
+        resultOf[currentTurn] = luckyNumber;
+        ResultSet(currentTurn, luckyNumber);
         currentTurn += 1;
         return true;
     }
 
+    // 获取某一期奖金
     function getRewardOfTurn(uint8 _turn, address _voter) public {
         if (paidRecord[_turn][_voter]) {
             return;
         }
-        // todo
+        // todo 比对结果，计算奖金，发币
     }
 
+    // 获取所有奖金
     function getAllReward(address _voter) public {
         for (uint8 i=0; i < currentTurn; i++) {
             getRewardOfTurn(_voter, i);
