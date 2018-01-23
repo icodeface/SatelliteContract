@@ -95,13 +95,14 @@ contract SatelliteContract {
 
     // 获取所有奖金
     function getAllReward(address _voter) public {
-        for (uint8 i=0; i < currentTurn; i++) {
+        for (uint8 i=1; i < currentTurn; i++) {
             getRewardOfTurn(_voter, i);
         }
     }
 
+    // 提取所有剩余的qtum和其他币
     function withdraw() onlyManager {
-        // todo 提取所有剩余的qtum和其他币---坑
+        // todo ---坑
     }
 
     // disable pay QTUM to this contract
