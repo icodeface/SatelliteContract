@@ -20,10 +20,23 @@ contract SatelliteContract {
     mapping(uint8 => string) public resultOf; // 随机数结果记录
     uint8 resultLength = 5;
     bytes table = "0123456789";
+    address[] public appAddressList;
 
     event Vote(uint8 indexed _turn, address indexed _voter, string _luckyNumber);
     event ResultSet(uint8 indexed _turn, string _randomSeed, string _luckyNumber);
     event Paid(uint8 indexed _turn, address indexed _voter, uint amount);
+
+    modifier onlyApp() {
+        bool contain = false;
+        for (uint i=0; i < appAddressList.length; i++) {
+            if (msg.sender == appAddressList[i]) {
+                contain = true;
+                break;
+            }
+        }
+        require(contain);
+        _;
+    }
 
     modifier onlyManager() {
         require(msg.sender == contractManager);
@@ -43,25 +56,26 @@ contract SatelliteContract {
     }
 
     // 投注
-    function vote(address _voter, string _luckyNumber) public
-    returns (bool) {
+    function vote(address _voter, string _luckyNumber) public onlyApp
+    returns (bool success) {
         voteRecord[currentTurn][_voter] = _luckyNumber;
         Vote(currentTurn, _voter, _luckyNumber);
         return true;
     }
 
     // 计算某一期的中奖结果
-    function getRewardPercentage(uint8 _turn, address _voter) returns (uint8 _percentage) {
+    function getRewardLevel(uint8 _turn, address _voter) public
+    returns (uint8 level) {
         string result = resultOf(_turn);
         string record = voteRecord[_turn][_voter];
 
-        // todo
+        // todo 得找个复杂度低的算法
 
     }
 
     // 设置结果
     function setResult(string _randomSeed) public onlyManager
-    returns (bool) {
+    returns (bool success) {
         if (block.number - lastBlockHeight < 1000) {
             return false;
         }
@@ -89,7 +103,7 @@ contract SatelliteContract {
             return;
         }
         // todo 比对结果，计算奖金，发币---坑
-        uint8 percentage = getRewardPercentage(_turn, _voter);
+        uint8 level = getRewardLevel(_turn, _voter);
 
     }
 
@@ -105,9 +119,29 @@ contract SatelliteContract {
         // todo ---坑
     }
 
+    function addApp(address _app) public onlyManager {
+        appAddressList.push(_app);
+    }
+
+    function removeApp(uint _index) public onlyManager {
+        require(_index < appAddressList.length);
+        for (uint i=0; i< appAddressList.length; i++) {
+            if (i == appAddressList.length -1) {
+                delete appAddressList[i];
+                appAddressList.length -= 1;
+            }
+            else if (i >= _index) {
+                appAddressList[i] = appAddressList[i+1];
+            }
+        }
+    }
+
+
     // disable pay QTUM to this contract
     function () public payable {
         revert();
     }
+
+
 
 }
