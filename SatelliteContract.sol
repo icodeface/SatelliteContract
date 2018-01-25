@@ -19,14 +19,14 @@ contract SatelliteContract {
     uint8 resultLength = 5;
     bytes table = "0123456789";
 
-    mapping(uint8 => mapping(address => bytes)) public voteRecord; // 用户投注记录
+    mapping(uint8 => mapping(address => string)) public voteRecord; // 用户投注记录
     mapping(uint8 => mapping(address => bool)) public paidRecord; // 用户领奖记录
-    mapping(uint8 => bytes) public resultOf; // 随机数结果记录
+    mapping(uint8 => string) public resultOf; // 随机数结果记录
     mapping(uint8 => uint) countRecord; // 每轮投注总人数
     address[] public appAddressList;
 
-    event Voted(uint8 indexed _turn, address indexed _voter, bytes _luckyNumber);
-    event ResultSet(uint8 indexed _turn, bytes _randomSeed, bytes _luckyNumber);
+    event Voted(uint8 indexed _turn, address indexed _voter, string _luckyNumber);
+    event ResultSet(uint8 indexed _turn, string _randomSeed, string _luckyNumber);
     event Paid(uint8 indexed _turn, address indexed _voter);
 
     modifier onlyApp() {
@@ -72,9 +72,9 @@ contract SatelliteContract {
     }
 
     // 投注
-    function vote(address _voter, bytes _luckyNumber) public onlyApp
+    function vote(address _voter, string _luckyNumber) public onlyApp
     returns (bool success) {
-        assert(_luckyNumber.length == uint(resultLength));
+        assert(bytes(_luckyNumber).length == uint(resultLength));
         voteRecord[currentTurn][_voter] = _luckyNumber;
         countRecord[currentTurn] += 1;
         Voted(currentTurn, _voter, _luckyNumber);
@@ -85,11 +85,11 @@ contract SatelliteContract {
     function getMatchCount(uint8 _turn, address _voter) public view
     returns (uint8 matchCount)
     {
-        bytes storage result = resultOf[_turn];
-        bytes storage record = voteRecord[_turn][_voter];
+        string storage result = resultOf[_turn];
+        string storage record = voteRecord[_turn][_voter];
         matchCount = 0;
         for (uint8 i=0; i< resultLength; i++) {
-            if (result[i] == record[i]) {
+            if (bytes(result)[i] == bytes(record)[i]) {
                 matchCount += 1;
             }
         }
@@ -97,20 +97,21 @@ contract SatelliteContract {
     }
 
     // 设置结果
-    function setResult(bytes _randomSeed) public onlyManager
+    function setResult(string _randomSeed) public onlyManager
     returns (bool success) {
-        if (block.number - lastBlockHeight < 1000) {
-          return false;
-        }
-
+        //if (block.number - lastBlockHeight < 1000) {
+        //  return false;
+        //}
         bytes32 blockhash = block.blockhash(block.number);
         uint256 hash = uint256(keccak256(blockhash, _randomSeed));
-        bytes memory luckyNumber = new bytes(resultLength);
+        bytes memory encode = new bytes(resultLength);
         for(uint8 i = 0; i < resultLength; i++) {
             uint256 rem = hash % 10;
             hash = hash / 10;
-            luckyNumber[i] = table[rem];
+            encode[i] = table[rem];
         }
+        string memory luckyNumber = new string(resultLength);
+        luckyNumber = string(encode);
         resultOf[currentTurn] = luckyNumber;
         ResultSet(currentTurn, _randomSeed, luckyNumber);
         currentTurn += 1;
