@@ -7,10 +7,10 @@ contract QRC20Token {
 
 contract SatelliteContract {
 
-    uint qtumBaseAward;
+    uint qtumBaseAward; //参与人数为1万的情况下三等奖的qtum奖金
 
     QRC20Token[] qrc20tokenList;
-    uint[] tokenBaseAwardList;
+    uint[] tokenBaseAwardList; //参与人数为1万的情况下三等奖的各token奖金
 
     address contractManager; // 卫星
     uint8 public currentTurn; // 当前开奖轮次
@@ -23,7 +23,7 @@ contract SatelliteContract {
     mapping(uint8 => mapping(address => bool)) public paidRecord; // 用户领奖记录
     mapping(uint8 => string) public resultOf; // 随机数结果记录
     mapping(uint8 => uint) countRecord; // 每轮投注总人数
-    address[] public appAddressList;
+    address[] public appAddressList; //beechat和qbao的地址
 
     event Voted(uint8 indexed _turn, address indexed _voter, string _luckyNumber);
     event ResultSet(uint8 indexed _turn, string _randomSeed, string _luckyNumber);
@@ -51,7 +51,7 @@ contract SatelliteContract {
         contractManager = msg.sender;
         lastBlockHeight = 55000;
         currentTurn = 0;
-        qtumBaseAward    = 1*10**8;
+        qtumBaseAward = 1*10**8;
 
         QRC20Token spcToken    = QRC20Token(0x06fffcfdc386f46fb94b78d9decb04649cef64c0);
         QRC20Token chatToken   = QRC20Token(0x06fffcfdc386f46fb94b78d9decb04649cef64c0);
@@ -71,7 +71,7 @@ contract SatelliteContract {
         tokenBaseAwardList.push(10**9);
     }
 
-    // 投注
+    // 替用户投注
     function vote(address _voter, string _luckyNumber) public onlyApp
     returns (bool success) {
         assert(bytes(_luckyNumber).length == uint(resultLength));
@@ -81,7 +81,7 @@ contract SatelliteContract {
         return true;
     }
 
-    // 计算某一期的匹配个数
+    // 计算某一期 某用户的中奖匹配个数
     function getMatchCount(uint8 _turn, address _voter) public view
     returns (uint8 matchCount)
     {
@@ -150,7 +150,7 @@ contract SatelliteContract {
         }
     }
 
-    // 提取所有剩余的qtum和其他币
+    // 提取活动结束后 所有剩余的qtum和其他币
     function withdraw() public onlyManager {
         msg.sender.transfer(this.balance);
         for (uint i=0; i < qrc20tokenList.length; i++) {
@@ -159,10 +159,12 @@ contract SatelliteContract {
         }
     }
 
+    // 添加qbao和beechat的账号地址
     function addApp(address _app) public onlyManager {
         appAddressList.push(_app);
     }
 
+    // 删除地址
     function removeApp(uint _index) public onlyManager {
         require(_index < appAddressList.length);
         for (uint i=0; i< appAddressList.length; i++) {
