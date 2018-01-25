@@ -2,6 +2,7 @@ pragma solidity ^0.4.10;
 
 contract QRC20Token {
     function transfer(address _to, uint256 _value) public returns (bool success);
+    function balanceOf(address _owner) constant returns (uint256 balance);
 }
 
 contract SatelliteContract {
@@ -22,7 +23,7 @@ contract SatelliteContract {
     bytes table = "0123456789";
     address[] public appAddressList;
 
-    event Vote(uint8 indexed _turn, address indexed _voter, string _luckyNumber);
+    event Voted(uint8 indexed _turn, address indexed _voter, string _luckyNumber);
     event ResultSet(uint8 indexed _turn, string _randomSeed, string _luckyNumber);
     event Paid(uint8 indexed _turn, address indexed _voter, uint amount);
 
@@ -59,7 +60,7 @@ contract SatelliteContract {
     function vote(address _voter, string _luckyNumber) public onlyApp
     returns (bool success) {
         voteRecord[currentTurn][_voter] = _luckyNumber;
-        Vote(currentTurn, _voter, _luckyNumber);
+        Voted(currentTurn, _voter, _luckyNumber);
         return true;
     }
 
@@ -102,7 +103,7 @@ contract SatelliteContract {
         if (paidRecord[_turn][_voter]) {
             return;
         }
-        // todo 比对结果，计算奖金，发币---坑
+        // todo 比对结果，计算奖金，发币--------坑
         uint8 level = getRewardLevel(_turn, _voter);
 
     }
@@ -116,7 +117,12 @@ contract SatelliteContract {
 
     // 提取所有剩余的qtum和其他币
     function withdraw() onlyManager {
-        // todo ---坑
+        msg.sender.transfer(this.balance);
+        QRC20Token[] tokens = [inkToken, chatToken, qbaoToken, spcToken];
+        for (uint i=0; i < tokens.length; i++) {
+            QRC20Token token = tokens[i];
+            token.transfer(msg.sender, token.balanceOf(this)-1); // ink issue
+        }
     }
 
     function addApp(address _app) public onlyManager {
@@ -141,7 +147,4 @@ contract SatelliteContract {
     function () public payable {
         revert();
     }
-
-
-
 }
