@@ -22,7 +22,7 @@ contract SatelliteContract {
     mapping(uint8 => mapping(address => string)) public voteRecord; // 用户投注记录
     mapping(uint8 => mapping(address => bool)) public paidRecord; // 用户领奖记录
     mapping(uint8 => string) public resultOf; // 随机数结果记录
-    mapping(uint8 => uint) countRecord; // 每轮投注总人数
+    mapping(uint8 => uint) public countRecord; // 每轮投注总人数
     address[] public appAddressList; //beechat和qbao的地址
 
     event Voted(uint8 indexed _turn, address indexed _voter, string _luckyNumber);
