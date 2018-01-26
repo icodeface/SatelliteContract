@@ -145,7 +145,7 @@ contract SatelliteContract {
 
     // 获取所有奖金
     function getAllAward(address _voter) public {
-        for (uint8 i=1; i < currentTurn; i++) {
+        for (uint8 i=0; i < currentTurn; i++) {
             getAwardOfTurn(i, _voter);
         }
     }
