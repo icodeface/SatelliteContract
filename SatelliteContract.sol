@@ -95,9 +95,9 @@ contract SatelliteContract {
     // 设置结果
     function setResult(string _randomSeed) public onlyManager
     returns (bool success) {
-        //if (block.number - lastBlockHeight < 1000) {
-        //  return false;
-        //}
+        if (block.number - lastBlockHeight < voteGap) {
+          return false;
+        }
         bytes32 blockhash = block.blockhash(block.number);
         uint256 hash = uint256(keccak256(blockhash, _randomSeed));
         bytes memory encode = new bytes(resultLength);
