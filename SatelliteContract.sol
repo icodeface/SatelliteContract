@@ -99,7 +99,7 @@ contract SatelliteContract {
           return false;
         }
         bytes32 blockhash = block.blockhash(block.number-1);
-        uint256 hash = uint256(keccak256(blockhash, _randomSeed));
+        uint256 hash = uint256(keccak256(blockhash, _randomSeed, block.coinbase));
         bytes memory encode = new bytes(resultLength);
         for(uint8 i = 0; i < resultLength; i++) {
             uint256 rem = hash % 10;
