@@ -174,8 +174,8 @@ contract SatelliteContract {
         }
     }
 
-    // disable pay QTUM to this contract
+    // enable pay QTUM to this contract
     function () public payable {
-        revert();
+        return;
     }
 }
