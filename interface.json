@@ -1,0 +1,353 @@
+[
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_voter",
+				"type": "address"
+			},
+			{
+				"name": "_luckyNumber",
+				"type": "string"
+			}
+		],
+		"name": "vote",
+		"outputs": [
+			{
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_turn",
+				"type": "uint8"
+			},
+			{
+				"name": "_voter",
+				"type": "address"
+			}
+		],
+		"name": "getMatchCount",
+		"outputs": [
+			{
+				"name": "matchCount",
+				"type": "uint8"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "withdraw",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "lastBlockHeight",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_voter",
+				"type": "address"
+			}
+		],
+		"name": "getAllAward",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_turn",
+				"type": "uint8"
+			},
+			{
+				"name": "_voter",
+				"type": "address"
+			}
+		],
+		"name": "paidRecord",
+		"outputs": [
+			{
+				"name": "paid",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_turn",
+				"type": "uint8"
+			}
+		],
+		"name": "resultOf",
+		"outputs": [
+			{
+				"name": "luckyNumber",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_randomSeed",
+				"type": "string"
+			}
+		],
+		"name": "setResult",
+		"outputs": [
+			{
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_app",
+				"type": "address"
+			}
+		],
+		"name": "addApp",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_index",
+				"type": "uint256"
+			}
+		],
+		"name": "removeApp",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_index",
+				"type": "uint256"
+			}
+		],
+		"name": "appAddressList",
+		"outputs": [
+			{
+				"name": "address",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_turn",
+				"type": "uint8"
+			},
+			{
+				"name": "_voter",
+				"type": "address"
+			}
+		],
+		"name": "voteRecord",
+		"outputs": [
+			{
+				"name": "luckyNumber",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "currentTurn",
+		"outputs": [
+			{
+				"name": "turn",
+				"type": "uint8"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_turn",
+				"type": "uint8"
+			},
+			{
+				"name": "_voter",
+				"type": "address"
+			}
+		],
+		"name": "getAwardOfTurn",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_turn",
+				"type": "uint8"
+			}
+		],
+		"name": "countRecord",
+		"outputs": [
+			{
+				"name": "count",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "voteGap",
+		"outputs": [
+			{
+				"name": "voteGap",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "fallback"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_turn",
+				"type": "uint8"
+			},
+			{
+				"indexed": true,
+				"name": "_voter",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_luckyNumber",
+				"type": "string"
+			}
+		],
+		"name": "Voted",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_turn",
+				"type": "uint8"
+			},
+			{
+				"indexed": false,
+				"name": "_randomSeed",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "_luckyNumber",
+				"type": "string"
+			}
+		],
+		"name": "ResultSet",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_turn",
+				"type": "uint8"
+			},
+			{
+				"indexed": true,
+				"name": "_voter",
+				"type": "address"
+			}
+		],
+		"name": "Paid",
+		"type": "event"
+	}
+]

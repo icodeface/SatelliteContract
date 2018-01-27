@@ -15,7 +15,7 @@ contract SatelliteContract {
     address contractManager; // 卫星
     uint8 public currentTurn; // 当前开奖轮次
     uint public lastBlockHeight; // 上一轮的开奖区块高度
-    uint public voteGap = 1000;
+    uint public voteGap = 2;
     uint8 resultLength = 5;
     bytes table = "0123456789";
 
@@ -30,14 +30,14 @@ contract SatelliteContract {
     event Paid(uint8 indexed _turn, address indexed _voter);
 
     modifier onlyApp() {
-        bool contain = false;
-        for (uint i=0; i < appAddressList.length; i++) {
-            if (msg.sender == appAddressList[i]) {
-                contain = true;
-                break;
-            }
-        }
-        require(contain);
+        // bool contain = false;
+        // for (uint i=0; i < appAddressList.length; i++) {
+        //     if (msg.sender == appAddressList[i]) {
+        //         contain = true;
+        //         break;
+        //     }
+        // }
+        // require(contain);
         _;
     }
 
@@ -49,29 +49,25 @@ contract SatelliteContract {
 
     function SatelliteContract() public {
         contractManager = msg.sender;
-        lastBlockHeight = 55000;
+        lastBlockHeight = 0;
         currentTurn = 0;
-        qtumBaseAward = 1*10**8;
+        qtumBaseAward    = 1*10**8;
 
-        QRC20Token spcToken    = QRC20Token(0x06fffcfdc386f46fb94b78d9decb04649cef64c0);
-        QRC20Token chatToken   = QRC20Token(0x06fffcfdc386f46fb94b78d9decb04649cef64c0);
-        QRC20Token qbaoToken   = QRC20Token(0x06fffcfdc386f46fb94b78d9decb04649cef64c0);
-        QRC20Token inkToken    = QRC20Token(0x06fffcfdc386f46fb94b78d9decb04649cef64c0);
+        QRC20Token qtcToken    = QRC20Token(0x06fffcfdc386f46fb94b78d9decb04649cef64c0);
+        QRC20Token qbaoToken   = QRC20Token(0xe21bc819674c8f7cc7d76b618914ecff082107b3);
+        QRC20Token inkToken    = QRC20Token(0xf19cabc74404cb772a8063a7294ab05f82b9b98f);
 
-        qrc20tokenList.push(spcToken);
-        tokenBaseAwardList.push(10**8);
-
-        qrc20tokenList.push(chatToken);
-        tokenBaseAwardList.push(10**8);
+        qrc20tokenList.push(qtcToken);
+        tokenBaseAwardList.push(1*10**8);
 
         qrc20tokenList.push(qbaoToken);
-        tokenBaseAwardList.push(10**8);
+        tokenBaseAwardList.push(3*10**8);
 
         qrc20tokenList.push(inkToken);
-        tokenBaseAwardList.push(10**9);
+        tokenBaseAwardList.push(5*10**9);
     }
 
-    // 替用户投注
+    // 投注
     function vote(address _voter, string _luckyNumber) public onlyApp
     returns (bool success) {
         assert(bytes(_luckyNumber).length == uint(resultLength));
@@ -99,10 +95,10 @@ contract SatelliteContract {
     // 设置结果
     function setResult(string _randomSeed) public onlyManager
     returns (bool success) {
-        if (block.number - lastBlockHeight < 1000) {
+        if (block.number - lastBlockHeight < voteGap) {
           return false;
         }
-        bytes32 blockhash = block.blockhash(block.number);
+        bytes32 blockhash = block.blockhash(block.number-1);
         uint256 hash = uint256(keccak256(blockhash, _randomSeed));
         bytes memory encode = new bytes(resultLength);
         for(uint8 i = 0; i < resultLength; i++) {
@@ -125,18 +121,18 @@ contract SatelliteContract {
         }
 
         uint8 matchCount = getMatchCount(_turn, _voter);
-        if (matchCount < resultLength - 3) {
+        if (matchCount < resultLength - 5) {
             paidRecord[_turn][_voter] = true;
             return;
         }
 
         uint totalCount = countRecord[_turn];
-        uint qtumAmount = (10**uint(3+matchCount-resultLength) * qtumBaseAward * 10**4) / totalCount;
+        uint qtumAmount = (10**uint(5+matchCount-resultLength) * qtumBaseAward);
         paidRecord[_turn][_voter] = true;
         _voter.transfer(qtumAmount);
 
         for (uint i=0; i < qrc20tokenList.length; i++) {
-            uint tokenAmount = (10**uint(3+matchCount-resultLength) * tokenBaseAwardList[i] * 10**4) / totalCount;
+            uint tokenAmount = (10**uint(5+matchCount-resultLength) * tokenBaseAwardList[i]);
             QRC20Token token = qrc20tokenList[i];
             token.transfer(_voter, tokenAmount);
         }
@@ -178,8 +174,8 @@ contract SatelliteContract {
         }
     }
 
-    // disable pay QTUM to this contract
+    // enable pay QTUM to this contract
     function () public payable {
-        revert();
+        return;
     }
 }
