@@ -51,20 +51,20 @@ contract SatelliteContract {
         contractManager = msg.sender;
         lastBlockHeight = 0;
         currentTurn = 0;
-        qtumBaseAward    = 98*10**8;
+        qtumBaseAward    = 1*10**8;
 
         QRC20Token qtcToken    = QRC20Token(0x06fffcfdc386f46fb94b78d9decb04649cef64c0);
         QRC20Token qbaoToken   = QRC20Token(0xe21bc819674c8f7cc7d76b618914ecff082107b3);
         QRC20Token inkToken    = QRC20Token(0xf19cabc74404cb772a8063a7294ab05f82b9b98f);
 
         qrc20tokenList.push(qtcToken);
-        tokenBaseAwardList.push(18*10**8);
+        tokenBaseAwardList.push(1*10**8);
 
         qrc20tokenList.push(qbaoToken);
-        tokenBaseAwardList.push(35*10**8);
+        tokenBaseAwardList.push(3*10**8);
 
         qrc20tokenList.push(inkToken);
-        tokenBaseAwardList.push(95*10**9);
+        tokenBaseAwardList.push(5*10**9);
     }
 
     // 投注
