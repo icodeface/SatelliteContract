@@ -93,6 +93,7 @@ contract SatelliteContract {
     }
 
     // 设置结果
+    // warning: solidity is not secure enough to generate randomness
     function setResult(string _randomSeed) public onlyManager
     returns (bool success) {
         if (block.number - lastBlockHeight < voteGap) {
