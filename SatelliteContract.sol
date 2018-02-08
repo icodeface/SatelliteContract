@@ -30,6 +30,7 @@ contract SatelliteContract {
         if (block.number - lastBlockHeight < voteGap) {
           return false;
         }
+        lastBlockHeight = block.number;
         uint256 hash = uint256(keccak256(block.timestamp, _randomSeed, block.coinbase));
         bytes memory encode = new bytes(resultLength);
         for(uint8 i = 0; i < resultLength; i++) {
